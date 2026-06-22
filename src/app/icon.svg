@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="8" fill="#071827"/>
+  <path d="M8 15h16v10h16V15h16M8 49h16V39h16v10h16" fill="none" stroke="#1e5bff" stroke-width="2"/>
+  <circle cx="8" cy="15" r="3" fill="#78bdff"/><circle cx="56" cy="15" r="3" fill="#78bdff"/>
+  <circle cx="8" cy="49" r="3" fill="#78bdff"/><circle cx="56" cy="49" r="3" fill="#78bdff"/>
+  <text x="32" y="37" fill="#f3f8ff" font-size="14" font-family="Arial" font-weight="700" text-anchor="middle">BY</text>
+</svg>
