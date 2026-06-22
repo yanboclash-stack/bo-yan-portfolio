@@ -9,7 +9,7 @@ import {
   useSpring,
   useTransform,
 } from "motion/react";
-import { ReactNode, useRef } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 
 type SceneProps = {
   children: ReactNode;
@@ -233,6 +233,69 @@ export function SignalJourney() {
   );
   const mistScale = useTransform(smoothProgress, [0, .2, .4, .6, .8, 1], [.82, 1.45, .86, 1.5, .88, 1.28]);
   const mistX = useTransform(smoothProgress, [0, .25, .5, .75, 1], ["-16%", "9%", "-8%", "12%", "-4%"]);
+
+  useEffect(() => {
+    const journey = journeyRef.current;
+    if (!journey) return;
+
+    const snapPoints = [0, .29, .5, .7, .9];
+    const intentThreshold = 180;
+    let accumulatedDelta = 0;
+    let locked = false;
+    let unlockTimer: number | undefined;
+
+    const metrics = () => {
+      const top = journey.offsetTop;
+      const span = Math.max(1, journey.offsetHeight - window.innerHeight);
+      const progress = (window.scrollY - top) / span;
+      return { top, span, progress };
+    };
+
+    const nextPoint = (progress: number, direction: number) => {
+      if (direction > 0) return snapPoints.find(point => point > progress + .035);
+      return [...snapPoints].reverse().find(point => point < progress - .035);
+    };
+
+    const moveTo = (point: number, top: number, span: number) => {
+      locked = true;
+      accumulatedDelta = 0;
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({ top: top + point * span, behavior: reducedMotion ? "auto" : "smooth" });
+      window.clearTimeout(unlockTimer);
+      unlockTimer = window.setTimeout(() => { locked = false; }, reducedMotion ? 120 : 950);
+    };
+
+    const onWheel = (event: WheelEvent) => {
+      const { top, span, progress } = metrics();
+      const insideJourney = window.scrollY >= top - 2 && window.scrollY <= top + span + 2;
+      if (!insideJourney || event.deltaY === 0) return;
+
+      const direction = Math.sign(event.deltaY);
+      const atFirstScene = direction < 0 && progress <= .005;
+      const leavingLastScene = direction > 0 && progress >= snapPoints.at(-1)! - .012;
+      if (atFirstScene || leavingLastScene) {
+        accumulatedDelta = 0;
+        return;
+      }
+
+      event.preventDefault();
+      if (locked) return;
+
+      if (accumulatedDelta !== 0 && Math.sign(accumulatedDelta) !== direction) accumulatedDelta = 0;
+      accumulatedDelta += event.deltaY;
+      if (Math.abs(accumulatedDelta) < intentThreshold) return;
+
+      const target = nextPoint(progress, direction);
+      if (target !== undefined) moveTo(target, top, span);
+      else accumulatedDelta = 0;
+    };
+
+    window.addEventListener("wheel", onWheel, { passive: false });
+    return () => {
+      window.removeEventListener("wheel", onWheel);
+      window.clearTimeout(unlockTimer);
+    };
+  }, []);
 
   return (
     <div className="signal-journey" ref={journeyRef}>
