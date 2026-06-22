@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowDown, ArrowUpRight, Radio } from "lucide-react";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
 import {
   motion,
   MotionValue,
@@ -42,14 +42,43 @@ function JourneyScene({
         : [start, start + 0.045, end - 0.045, end],
     first ? [1, 1, 0] : last ? [0, 1, 1] : [0, 1, 1, 0],
   );
-  const scale = useTransform(progress, [start, end], [first ? 1 : 0.94, last ? 1 : 1.055]);
-  const y = useTransform(progress, [start, end], [first ? 0 : 34, last ? 0 : -34]);
+  const scale = useTransform(
+    progress,
+    first
+      ? [start, end - 0.055, end]
+      : last
+        ? [start, start + 0.06, end]
+        : [start, start + 0.05, end - 0.055, end],
+    first ? [1, 1.035, 1.3] : last ? [0.73, 1, 1.07] : [0.72, 1, 1.07, 1.3],
+  );
+  const y = useTransform(
+    progress,
+    first
+      ? [start, end - 0.055, end]
+      : last
+        ? [start, start + 0.06, end]
+        : [start, start + 0.05, end - 0.055, end],
+    first ? [0, -8, -90] : last ? [90, 0, -18] : [90, 0, -24, -105],
+  );
+  const filter = useTransform(
+    progress,
+    first
+      ? [start, end - 0.055, end]
+      : last
+        ? [start, start + 0.06, end]
+        : [start, start + 0.05, end - 0.055, end],
+    first
+      ? ["blur(0px)", "blur(0px)", "blur(17px)"]
+      : last
+        ? ["blur(18px)", "blur(0px)", "blur(0px)"]
+        : ["blur(18px)", "blur(0px)", "blur(1px)", "blur(18px)"],
+  );
   const pointerEvents = useTransform(opacity, value => value > 0.55 ? "auto" : "none");
 
   return (
     <motion.section
       className={`journey-scene scene-${align}`}
-      style={{ opacity, scale, y, pointerEvents }}
+      style={{ opacity, scale, y, filter, pointerEvents }}
       aria-label={label}
     >
       <div className="scene-coordinate"><span>{number}</span>{label}</div>
@@ -102,10 +131,10 @@ function BreadboardArt() {
         <path d="M110 102h400M110 392h400" stroke="#e43f53" strokeWidth="3"/><path d="M110 112h400M110 382h400" stroke="#2563eb" strokeWidth="3"/>
         <g fill="#38546a">{holes}</g>
         <path d="M120 246h380" stroke="#b5c5d0" strokeWidth="12"/>
-        <g className="jumper red" fill="none" stroke="#ff4e66" strokeWidth="7" strokeLinecap="round"><path d="M159 163C207 45 373 50 455 161"/></g>
-        <g className="jumper blue" fill="none" stroke="#1e5bff" strokeWidth="7" strokeLinecap="round"><path d="M188 343c37-109 171-105 237-7"/></g>
         <g className="board-chip"><rect x="257" y="202" width="106" height="86" rx="5" fill="#101a24"/><path d="M267 192v20m17-20v20m17-20v20m17-20v20m17-20v20m17-20v20M267 278v20m17-20v20m17-20v20m17-20v20m17-20v20m17-20v20" stroke="#aebcc7" strokeWidth="5"/><circle cx="310" cy="245" r="7" fill="#458cff"/></g>
         <g className="board-led"><circle cx="434" cy="224" r="17" fill="#61c6ff"/><circle cx="434" cy="224" r="8" fill="white"/></g>
+        <g className="jumper red" fill="none" stroke="#ff4e66" strokeWidth="7" strokeLinecap="round"><path d="M159 163C207 45 373 50 455 161"/></g>
+        <g className="jumper blue" fill="none" stroke="#1e5bff" strokeWidth="7" strokeLinecap="round"><path d="M188 343c37-109 171-105 237-7"/></g>
       </g>
     </svg>
   );
@@ -152,10 +181,10 @@ function ScopeArt() {
 }
 
 function SignalPulse({ progress }: { progress: MotionValue<number> }) {
-  const x = useTransform(progress, [0, .12, .28, .43, .59, .75, .9, 1], ["10vw", "67vw", "76vw", "18vw", "78vw", "24vw", "77vw", "86vw"]);
-  const y = useTransform(progress, [0, .12, .28, .43, .59, .75, .9, 1], ["73vh", "47vh", "29vh", "60vh", "57vh", "29vh", "53vh", "25vh"]);
-  const opacity = useTransform(progress, [0, .015, .955, 1], [0, 1, 1, 0]);
-  const scale = useTransform(progress, [0, .15, .35, .55, .75, 1], [.7, 1.15, .8, 1.25, .86, .6]);
+  const x = useTransform(progress, [0, .18, .38, .58, .78, 1], ["11vw", "68vw", "20vw", "77vw", "24vw", "82vw"]);
+  const y = useTransform(progress, [0, .18, .38, .58, .78, 1], ["73vh", "43vh", "61vh", "55vh", "29vh", "22vh"]);
+  const opacity = useTransform(progress, [0, .02, .965, 1], [0, .48, .48, 0]);
+  const scale = useTransform(progress, [0, .2, .4, .6, .8, 1], [.64, 1.08, .76, 1.18, .82, .55]);
 
   return (
     <motion.div className="traveling-signal" style={{ x, y, opacity, scale }} aria-hidden="true">
@@ -167,6 +196,23 @@ function SignalPulse({ progress }: { progress: MotionValue<number> }) {
   );
 }
 
+function SkillList({ items }: { items: string[] }) {
+  return <div className="scene-skills">{items.map((item, index) => <span key={item}><i>0{index + 1}</i>{item}</span>)}</div>;
+}
+
+function SkillDepthField() {
+  return (
+    <div className="skill-depth-field" aria-hidden="true">
+      <div className="depth-core"><span>EE</span><small>SYSTEM</small></div>
+      <div className="depth-card depth-one"><span>HARDWARE</span><small>BUILD · SOLDER · WIRE</small></div>
+      <div className="depth-card depth-two"><span>SIGNALS</span><small>ANALYZE · FILTER · TRANSFORM</small></div>
+      <div className="depth-card depth-three"><span>TESTING</span><small>MEASURE · ISOLATE · VERIFY</small></div>
+      <div className="depth-card depth-four"><span>CODE</span><small>PYTHON · MATLAB · EMBEDDED</small></div>
+      <div className="depth-beam beam-a"/><div className="depth-beam beam-b"/>
+    </div>
+  );
+}
+
 export function SignalJourney() {
   const journeyRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: journeyRef, offset: ["start start", "end end"] });
@@ -174,15 +220,27 @@ export function SignalJourney() {
   const pathLength = useTransform(smoothProgress, [0, 1], [0, 1]);
   const background = useTransform(
     smoothProgress,
-    [0, .22, .42, .62, .82, 1],
-    ["#080b10", "#0b1730", "#0d2341", "#111923", "#111b2b", "#07131f"],
+    [0, .2, .4, .6, .8, 1],
+    ["#080b10", "#0b172b", "#12233b", "#0c1d2c", "#101827", "#09131e"],
   );
   const progressHeight = useTransform(smoothProgress, [0, 1], ["0%", "100%"]);
+  const gridScale = useTransform(smoothProgress, [0, .2, .4, .6, .8, 1], [1, 1.22, .88, 1.28, .9, 1.12]);
+  const gridRotate = useTransform(smoothProgress, [0, .35, .7, 1], [0, 1.5, -1.2, 0.8]);
+  const mistOpacity = useTransform(
+    smoothProgress,
+    [0, .155, .2, .245, .355, .4, .445, .555, .6, .645, .755, .8, .845, 1],
+    [0, .05, .82, .06, .05, .86, .06, .05, .84, .06, .05, .82, .04, 0],
+  );
+  const mistScale = useTransform(smoothProgress, [0, .2, .4, .6, .8, 1], [.82, 1.45, .86, 1.5, .88, 1.28]);
+  const mistX = useTransform(smoothProgress, [0, .25, .5, .75, 1], ["-16%", "9%", "-8%", "12%", "-4%"]);
 
   return (
     <div className="signal-journey" ref={journeyRef}>
       <motion.div className="journey-viewport" style={{ backgroundColor: background }}>
         <div className="journey-noise" aria-hidden="true" />
+        <motion.div className="journey-depth-grid" style={{ scale: gridScale, rotate: gridRotate }} aria-hidden="true" />
+        <motion.div className="mist-transition mist-back" style={{ opacity: mistOpacity, scale: mistScale, x: mistX }} aria-hidden="true"><i/><i/><i/></motion.div>
+        <motion.div className="mist-transition mist-front" style={{ opacity: mistOpacity, scale: mistScale, x: mistX }} aria-hidden="true"><i/><i/></motion.div>
         <svg className="signal-path" viewBox="0 0 1000 700" preserveAspectRatio="none" aria-hidden="true">
           <path className="signal-path-base" d="M65 565C167 585 196 244 352 238S504 592 635 551 727 204 934 182" />
           <motion.path className="signal-path-live" d="M65 565C167 585 196 244 352 238S504 592 635 551 727 204 934 182" style={{ pathLength }} />
@@ -190,75 +248,63 @@ export function SignalJourney() {
         <SignalPulse progress={smoothProgress} />
 
         <div className="journey-progress" aria-hidden="true">
-          <span>01</span><div><motion.i style={{ height: progressHeight }} /></div><span>06</span>
+          <span>01</span><div><motion.i style={{ height: progressHeight }} /></div><span>05</span>
         </div>
         <Link className="skip-journey" href="/projects">Skip journey <ArrowUpRight size={14}/></Link>
 
-        <JourneyScene progress={smoothProgress} range={[0, .17]} first align="left" number="01" label="Signal source">
-          <div className="intro-orbit" aria-hidden="true"><i/><i/><i/><Radio/></div>
+        <JourneyScene progress={smoothProgress} range={[0, .23]} first align="left" number="01" label="Engineering skill map">
+          <SkillDepthField />
           <div className="journey-copy intro-copy">
-            <p className="scene-eyebrow"><span/> Electrical engineering · UC Davis</p>
-            <h1>Follow<br/>the <em>signal.</em></h1>
-            <p className="scene-lede">A scroll-driven journey through the systems I build, measure, debug, and bring to life.</p>
-            <div className="journey-scroll"><ArrowDown size={16}/><span>Scroll to transmit</span></div>
+            <p className="scene-eyebrow"><span/> Electrical engineering · skill map</p>
+            <h1>Build.<br/>Measure.<br/><em>Decode.</em></h1>
+            <p className="scene-lede">I work across the complete engineering loop: turning physical inputs into useful behavior, then proving the system with measurements.</p>
+            <div className="intro-skill-line"><span>Hardware</span><span>Signals</span><span>Testing</span><span>Code</span></div>
+            <div className="journey-scroll"><ArrowDown size={16}/><span>Enter the skill set</span></div>
           </div>
         </JourneyScene>
 
-        <JourneyScene progress={smoothProgress} range={[.12, .34]} align="left" number="02" label="Sound-seeking robot">
+        <JourneyScene progress={smoothProgress} range={[.16, .43]} align="left" number="02" label="Embedded systems">
           <motion.div className="journey-object object-right object-robot"><RobotArt/></motion.div>
           <div className="journey-copy">
-            <p className="scene-eyebrow"><span/> Sensing + motion</p>
-            <h2>Audio in.<br/><em>Motion out.</em></h2>
-            <p>Microphones capture the signal. Op-amps shape it. A microcontroller decides where the robot moves next.</p>
-            <Link className="scene-link" href="/projects#sound-seeking-robot">See the robot <ArrowUpRight size={16}/></Link>
+            <p className="scene-eyebrow"><span/> Embedded intelligence</p>
+            <h2>Sense.<br/>Decide. <em>Act.</em></h2>
+            <p>I connect sensors, analog conditioning, control logic, and physical outputs into one responsive system.</p>
+            <SkillList items={["Sensor inputs", "Op-amp conditioning", "Microcontroller logic", "Motor control"]}/>
           </div>
-          <div className="scene-spec spec-bottom"><span>RANGE</span><strong>≈ 2 FT</strong></div>
+          <div className="scene-spec spec-bottom"><span>SKILL LOOP</span><strong>INPUT → ACTION</strong></div>
         </JourneyScene>
 
-        <JourneyScene progress={smoothProgress} range={[.29, .51]} align="right" number="03" label="Breadboard and circuits">
+        <JourneyScene progress={smoothProgress} range={[.36, .63]} align="right" number="03" label="Circuit integration">
           <motion.div className="journey-object object-left object-board"><BreadboardArt/></motion.div>
           <div className="journey-copy">
-            <p className="scene-eyebrow"><span/> Assembly + integration</p>
-            <h2>Components<br/>become a <em>system.</em></h2>
-            <p>Resistors, capacitors, microphones, headers, and jumper wires—assembled carefully, then tested section by section.</p>
-            <Link className="scene-link" href="/about">Explore my toolkit <ArrowUpRight size={16}/></Link>
+            <p className="scene-eyebrow"><span/> Hardware integration</p>
+            <h2>Build.<br/>Connect. <em>Debug.</em></h2>
+            <p>I move from schematics and individual components to reliable assemblies, checking each block before full integration.</p>
+            <SkillList items={["Circuit assembly", "Soldering + wiring", "Component verification", "Board-level debugging"]}/>
           </div>
-          <div className="scene-spec spec-top"><span>BUILD MODE</span><strong>HANDS-ON</strong></div>
+          <div className="scene-spec spec-top"><span>WORK MODE</span><strong>HANDS-ON</strong></div>
         </JourneyScene>
 
-        <JourneyScene progress={smoothProgress} range={[.46, .68]} align="left" number="04" label="Measurement and testing">
+        <JourneyScene progress={smoothProgress} range={[.56, .83]} align="left" number="04" label="Testing and troubleshooting">
           <motion.div className="journey-object object-right object-meter"><MultimeterArt/></motion.div>
           <div className="journey-copy">
-            <p className="scene-eyebrow"><span/> Measurement + debugging</p>
+            <p className="scene-eyebrow"><span/> Evidence-driven troubleshooting</p>
             <h2>Measure.<br/>Isolate. <em>Verify.</em></h2>
-            <p>From HVAC control boards to student circuits, I use voltage, continuity, and signal checks to turn symptoms into evidence.</p>
-            <Link className="scene-link" href="/experience">View experience <ArrowUpRight size={16}/></Link>
+            <p>I turn symptoms into evidence, isolate the fault, apply the fix, and verify that the complete system performs correctly.</p>
+            <SkillList items={["Voltage + continuity", "Fault isolation", "Safe test practice", "Performance verification"]}/>
           </div>
-          <div className="scene-spec spec-bottom"><span>READING</span><strong>12.48 VDC</strong></div>
+          <div className="scene-spec spec-bottom"><span>METHOD</span><strong>TEST → PROVE</strong></div>
         </JourneyScene>
 
-        <JourneyScene progress={smoothProgress} range={[.63, .84]} align="right" number="05" label="Signal processing">
+        <JourneyScene progress={smoothProgress} range={[.76, 1]} last align="right" number="05" label="Signals and simulation">
           <motion.div className="journey-object object-left object-scope"><ScopeArt/></motion.div>
           <div className="journey-copy">
-            <p className="scene-eyebrow"><span/> Python + DSP</p>
-            <h2>See what the<br/>signal <em>keeps.</em></h2>
-            <p>DFT and DCT compression, reconstruction, SNR, mean squared error, retained energy—and the sound of the result.</p>
-            <Link className="scene-link" href="/projects#audio-compression">Open the analysis <ArrowUpRight size={16}/></Link>
+            <p className="scene-eyebrow"><span/> Analysis + modeling</p>
+            <h2>Model.<br/>Transform. <em>Understand.</em></h2>
+            <p>I use simulation and code to reveal system behavior, compare tradeoffs, and connect mathematical results to physical meaning.</p>
+            <SkillList items={["Python · NumPy · SciPy", "MATLAB + App Designer", "DFT / DCT analysis", "LTspice + Cadence"]}/>
           </div>
-          <div className="scene-spec spec-top"><span>DOMAIN</span><strong>TIME ↔ FREQUENCY</strong></div>
-        </JourneyScene>
-
-        <JourneyScene progress={smoothProgress} range={[.79, 1]} last align="center" number="06" label="Next connection">
-          <div className="final-rings" aria-hidden="true"><i/><i/><i/><i/></div>
-          <div className="journey-copy final-copy">
-            <p className="scene-eyebrow"><span/> Signal received</p>
-            <h2>The next system<br/>starts with a <em>connection.</em></h2>
-            <p>I’m looking for opportunities across hardware testing, RF, power, controls, automation, and product engineering.</p>
-            <div className="final-actions">
-              <Link className="journey-primary" href="/contact">Start a conversation <ArrowUpRight size={17}/></Link>
-              <Link className="scene-link" href="/projects">View all projects <ArrowUpRight size={16}/></Link>
-            </div>
-          </div>
+          <div className="scene-spec spec-top"><span>TOOLCHAIN</span><strong>CODE + SIMULATION</strong></div>
         </JourneyScene>
       </motion.div>
     </div>
