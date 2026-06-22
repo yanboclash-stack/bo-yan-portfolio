@@ -10,7 +10,6 @@ export function Footer() {
       </div>
       <div className="footer-bottom">
         <span>© {new Date().getFullYear()} Bo Yan</span>
-        <span>Designed with intent. Engineered for motion.</span>
         <span>Davis, CA · PST</span>
       </div>
     </footer>
