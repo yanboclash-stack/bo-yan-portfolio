@@ -200,16 +200,47 @@ function SkillList({ items }: { items: string[] }) {
   return <div className="scene-skills">{items.map((item, index) => <span key={item}><i>0{index + 1}</i>{item}</span>)}</div>;
 }
 
-function SkillDepthField() {
+function EngineeringMountain({ progress }: { progress: MotionValue<number> }) {
+  const orbitRotation = useTransform(progress, [0, .23], [0, 138]);
+  const counterRotation = useTransform(progress, [0, .23], [0, -138]);
+  const mountainScale = useTransform(progress, [0, .15, .23], [.88, 1, 1.16]);
+  const mountainY = useTransform(progress, [0, .23], [24, -20]);
+
   return (
-    <div className="skill-depth-field" aria-hidden="true">
-      <div className="depth-core"><span>EE</span><small>SYSTEM</small></div>
-      <div className="depth-card depth-one"><span>HARDWARE</span><small>BUILD · SOLDER · WIRE</small></div>
-      <div className="depth-card depth-two"><span>SIGNALS</span><small>ANALYZE · FILTER · TRANSFORM</small></div>
-      <div className="depth-card depth-three"><span>TESTING</span><small>MEASURE · ISOLATE · VERIFY</small></div>
-      <div className="depth-card depth-four"><span>CODE</span><small>PYTHON · MATLAB · EMBEDDED</small></div>
-      <div className="depth-beam beam-a"/><div className="depth-beam beam-b"/>
-    </div>
+    <motion.div className="engineering-mountain" style={{ scale: mountainScale, y: mountainY }} aria-hidden="true">
+      <motion.div className="mountain-orbit" style={{ rotate: orbitRotation }}>
+        <motion.div className="mountain-info mountain-hardware" style={{ rotate: counterRotation }}><i>01</i><span>HARDWARE</span><small>BUILD · SOLDER · WIRE</small></motion.div>
+        <motion.div className="mountain-info mountain-embedded" style={{ rotate: counterRotation }}><i>02</i><span>EMBEDDED</span><small>SENSE · DECIDE · ACT</small></motion.div>
+        <motion.div className="mountain-info mountain-testing" style={{ rotate: counterRotation }}><i>03</i><span>TESTING</span><small>MEASURE · ISOLATE · VERIFY</small></motion.div>
+        <motion.div className="mountain-info mountain-signals" style={{ rotate: counterRotation }}><i>04</i><span>SIGNALS</span><small>MODEL · TRANSFORM · UNDERSTAND</small></motion.div>
+      </motion.div>
+
+      <svg className="mountain-svg" viewBox="0 0 720 600" role="presentation">
+        <defs>
+          <linearGradient id="mountainFace" x1="0" y1="0" x2="0.8" y2="1">
+            <stop stopColor="#173b5f"/><stop offset=".48" stopColor="#0c263e"/><stop offset="1" stopColor="#07131f"/>
+          </linearGradient>
+          <linearGradient id="mountainRidge" x1="0" x2="1"><stop stopColor="#8bcaff"/><stop offset=".5" stopColor="#2b78ff"/><stop offset="1" stopColor="#153d68"/></linearGradient>
+          <filter id="summitGlow"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <ellipse className="mountain-shadow" cx="360" cy="537" rx="290" ry="34"/>
+        <path className="mountain-face" d="M42 520L162 350l76 61L358 128l91 187 62-70 167 275z" fill="url(#mountainFace)"/>
+        <path className="mountain-side" d="M358 128l91 187 62-70 167 275H358z"/>
+        <g className="mountain-ridges" fill="none" stroke="url(#mountainRidge)">
+          <path d="M42 520L162 350l76 61L358 128l91 187 62-70 167 275"/>
+          <path d="M358 128L304 302l54 218M358 128l47 210-47 182M162 350l42 88 154 82M511 245l17 157 150 118"/>
+          <path d="M96 473l102-40 75 35 85-198 70 123 83-86 105 166"/>
+        </g>
+        <g className="mountain-contours" fill="none">
+          <path d="M79 504c98-48 160-6 240-45s132-71 290 19"/>
+          <path d="M116 454c82-37 139 1 211-48s143-65 243 0"/>
+          <path d="M156 405c56-23 92 10 157-42s122-43 199-8"/>
+        </g>
+        <g className="summit-beacon" filter="url(#summitGlow)"><circle cx="358" cy="128" r="8"/><path d="M358 110V74M337 89l21-15 21 15"/></g>
+        <g className="mountain-nodes"><circle cx="162" cy="350" r="5"/><circle cx="238" cy="411" r="5"/><circle cx="449" cy="315" r="5"/><circle cx="511" cy="245" r="5"/></g>
+      </svg>
+      <div className="mountain-base-label"><span>ENGINEERING SUMMIT</span><small>Scroll to orbit the skill set</small></div>
+    </motion.div>
   );
 }
 
@@ -316,7 +347,7 @@ export function SignalJourney() {
         <Link className="skip-journey" href="/projects">Skip journey <ArrowUpRight size={14}/></Link>
 
         <JourneyScene progress={smoothProgress} range={[0, .23]} first align="left" number="01" label="Engineering skill map">
-          <SkillDepthField />
+          <EngineeringMountain progress={smoothProgress} />
           <div className="journey-copy intro-copy">
             <p className="scene-eyebrow"><span/> Electrical engineering · skill map</p>
             <h1>Build.<br/>Measure.<br/><em>Decode.</em></h1>

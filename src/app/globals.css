@@ -392,12 +392,30 @@ em { color: var(--sky); font-style: normal; }
 @keyframes depthThree { 50% { transform: translate3d(12px,-10px,30px) rotateY(8deg); } }
 @keyframes depthFour { 50% { transform: translate3d(-8px,-16px,190px) rotateY(-6deg) rotateX(2deg); } }
 .depth-beam { height: 1px; position: absolute; left: 25%; right: 21%; top: 48%; background: linear-gradient(90deg, transparent, rgba(72,146,231,.45), transparent); box-shadow: 0 0 12px rgba(30,91,255,.35); transform: rotate(24deg) translateZ(-40px); }.beam-b { top: 57%; transform: rotate(-28deg) translateZ(-80px); }
+.engineering-mountain { width: min(58vw, 790px); height: 76vh; position: absolute; right: -3vw; top: 13vh; z-index: 2; transform-style: preserve-3d; transform-origin: 50% 70%; }
+.mountain-svg { width: 88%; height: auto; position: absolute; left: 6%; bottom: 0; z-index: 2; overflow: visible; filter: drop-shadow(0 48px 55px rgba(0,0,0,.48)); }
+.mountain-shadow { fill: rgba(0,0,0,.42); filter: blur(14px); }
+.mountain-side { fill: rgba(5,16,27,.68); }
+.mountain-ridges { stroke-width: 2; opacity: .68; filter: drop-shadow(0 0 5px rgba(50,133,255,.34)); }
+.mountain-contours { stroke: rgba(112,174,228,.2); stroke-width: 1.2; stroke-dasharray: 8 10; animation: contourFlow 7s linear infinite; }
+@keyframes contourFlow { to { stroke-dashoffset: -126; } }
+.summit-beacon { fill: #dff2ff; stroke: #6bb5ff; stroke-width: 2; animation: summitPulse 2.4s ease-in-out infinite; transform-origin: 358px 128px; }
+@keyframes summitPulse { 50% { opacity: .42; transform: scale(.9); } }
+.mountain-nodes { fill: #8dccff; filter: drop-shadow(0 0 8px #1e5bff); }
+.mountain-orbit { width: 95%; height: 45%; position: absolute; left: 2.5%; top: 38%; z-index: 4; border: 1px solid rgba(81,153,222,.22); border-radius: 50%; box-shadow: 0 0 50px rgba(30,91,255,.06); transform-origin: 50% 50%; transform-style: preserve-3d; }
+.mountain-orbit::before, .mountain-orbit::after { content: ""; position: absolute; inset: 12% -4%; border: 1px dashed rgba(102,164,221,.11); border-radius: 50%; transform: rotate(7deg); }.mountain-orbit::after { inset: -14% 9%; transform: rotate(-9deg); }
+.mountain-info { min-width: 185px; min-height: 68px; padding: 13px 15px; position: absolute; display: grid; grid-template-columns: 25px 1fr; grid-template-rows: auto auto; align-content: center; border: 1px solid rgba(124,185,238,.26); background: linear-gradient(135deg, rgba(17,49,76,.88), rgba(5,19,31,.68)); box-shadow: 0 20px 55px rgba(0,0,0,.32), inset 0 0 25px rgba(69,139,207,.04); backdrop-filter: blur(14px); transform-origin: center; }
+.mountain-info i { grid-row: 1 / 3; align-self: center; color: #4b8dce; font-size: 7px; font-style: normal; }.mountain-info span { color: #e5f3ff; font: 650 17px var(--display); letter-spacing: .045em; }.mountain-info small { margin-top: 6px; color: #6888a3; font-size: 6px; letter-spacing: .13em; }
+.mountain-hardware { left: 7%; top: -20%; }.mountain-embedded { right: -5%; top: 5%; }.mountain-testing { right: 12%; bottom: -24%; }.mountain-signals { left: -6%; bottom: 3%; }
+.mountain-base-label { position: absolute; left: 50%; bottom: 2%; z-index: 5; padding: 10px 13px; border-left: 2px solid #2e7dff; background: rgba(5,17,28,.72); backdrop-filter: blur(10px); transform: translateX(-50%); white-space: nowrap; }
+.mountain-base-label span, .mountain-base-label small { display: block; }.mountain-base-label span { color: #9dbbd3; font-size: 7px; font-weight: 700; letter-spacing: .16em; }.mountain-base-label small { margin-top: 5px; color: #4f718c; font-size: 6px; letter-spacing: .1em; }
 
 @media (max-width: 980px) {
   .journey-scene { width: calc(100vw - 52px); }
   .journey-copy { width: min(54vw, 540px); }
   .journey-object { width: 56vw; opacity: .88; }
   .skill-depth-field { width: 59vw; right: -7vw; }
+  .engineering-mountain { width: 64vw; right: -9vw; }
   .object-right { right: -8vw; }.object-left { left: -8vw; }
   .journey-copy h2 { font-size: clamp(52px, 8.5vw, 85px); }
   .scene-spec { display: none; }
@@ -424,6 +442,12 @@ em { color: var(--sky); font-style: normal; }
   .scene-skills span { min-height: 36px; padding: 0 7px; gap: 6px; font-size: 6px; }
   .skill-depth-field { width: 122vw; height: 48vh; right: -59vw; top: auto; bottom: -5vh; opacity: .54; transform: scale(.78); transform-origin: center; }
   .depth-card { min-width: 155px; min-height: 60px; padding: 12px; }.depth-card span { font-size: 14px; }.depth-core { width: 116px; height: 116px; }
+  .engineering-mountain { width: 118vw; height: 46vh; left: 50%; right: auto; top: auto; bottom: -2vh; margin-left: -59vw; opacity: .62; }
+  .mountain-svg { width: 82%; left: 9%; }
+  .mountain-orbit { width: 92%; left: 4%; top: 35%; }
+  .mountain-info { min-width: 132px; min-height: 50px; padding: 8px 9px; grid-template-columns: 18px 1fr; }.mountain-info span { font-size: 12px; }.mountain-info small { margin-top: 3px; font-size: 4px; }.mountain-info i { font-size: 5px; }
+  .mountain-hardware { left: 8%; top: -19%; }.mountain-embedded { right: -2%; }.mountain-testing { right: 8%; bottom: -23%; }.mountain-signals { left: -2%; }
+  .mountain-base-label { display: none; }
   .journey-object { width: 104vw; left: 50%; right: auto; bottom: -3vh; transform: translateX(-50%); animation: none; opacity: .7; filter: drop-shadow(0 30px 35px rgba(0,0,0,.38)); }
   .object-board { width: 108vw; bottom: -6vh; }.object-meter { width: 92vw; bottom: -8vh; }.object-scope { width: 105vw; bottom: -5vh; }
   .scene-right .journey-copy { margin-left: 0; }
