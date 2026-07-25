@@ -1,5 +1,5 @@
-import { InfiniteProjectStaircase } from "@/components/infinite-project-staircase";
+import { SignalJourney } from "@/components/signal-journey";
 
 export default function Home() {
-  return <InfiniteProjectStaircase />;
+  return <SignalJourney />;
 }
