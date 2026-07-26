@@ -92,29 +92,6 @@ export const experience = [
   },
 ] as const;
 
-export const skillGroups = [
-  {
-    label: "Hardware",
-    value: 86,
-    items: ["Circuit analysis", "Soldering", "Board troubleshooting", "Multimeter testing", "Motors & control boards"],
-  },
-  {
-    label: "Simulation + Code",
-    value: 78,
-    items: ["LTspice", "Cadence", "MATLAB", "Python", "NumPy / SciPy", "JavaScript basics"],
-  },
-  {
-    label: "Signals + RF",
-    value: 74,
-    items: ["Signals & systems", "DSP concepts", "Electromagnetics", "Transmission lines", "Antenna fundamentals"],
-  },
-  {
-    label: "Engineering Practice",
-    value: 90,
-    items: ["Organized debugging", "Test documentation", "Teamwork", "Customer communication", "Independent learning"],
-  },
-] as const;
-
 export const coursework = {
   completed: ["Circuit Analysis", "Signals & Systems", "Digital Signals & Systems", "Electromagnetics I", "Electromagnetics II"],
   planned: ["RF & Microwave Engineering", "Antenna Engineering"],
