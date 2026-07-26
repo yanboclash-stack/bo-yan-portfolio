@@ -23,7 +23,6 @@ export const projects = [
       "Tuned the integrated hardware-software system until it reliably moved toward a sound source from approximately two feet away.",
     tags: ["Embedded Systems", "Op-Amps", "Soldering", "Motor Control"],
     accent: "#1E5BFF",
-    visual: "robot",
   },
   {
     id: "02",
@@ -36,7 +35,6 @@ export const projects = [
       "Compared retained energy, mean squared error, SNR, listening results, pitch perception, and distortion.",
     tags: ["Python", "NumPy", "SciPy", "Signal Processing"],
     accent: "#52A8FF",
-    visual: "wave",
   },
   {
     id: "03",
@@ -49,7 +47,6 @@ export const projects = [
       "Connected ThingSpeak cloud read/write functions to the application workflow for selected online data tracking.",
     tags: ["MATLAB", "App Designer", "ThingSpeak", "GUI"],
     accent: "#2563EB",
-    visual: "cloud",
   },
 ] as const;
 

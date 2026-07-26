@@ -1,13 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import {
   AnimatePresence,
   motion,
   useReducedMotion,
 } from "motion/react";
 import {
-  ArrowUpRight,
   ChevronDown,
   ChevronUp,
   Mouse,
@@ -156,6 +154,23 @@ export function SpiralProjects() {
 
   useEffect(() => {
     const handleWheel = (event: WheelEvent) => {
+      const eventTarget = event.target;
+      const detailPanel = eventTarget instanceof Element
+        ? eventTarget.closest(".project-panel-content") as HTMLElement | null
+        : null;
+      const panelCanScroll = detailPanel
+        && detailPanel.scrollHeight > detailPanel.clientHeight;
+      const panelAtTop = !detailPanel || detailPanel.scrollTop <= 0;
+      const panelAtBottom = !detailPanel
+        || detailPanel.scrollTop + detailPanel.clientHeight >= detailPanel.scrollHeight - 1;
+
+      if (
+        panelCanScroll
+        && ((event.deltaY < 0 && !panelAtTop) || (event.deltaY > 0 && !panelAtBottom))
+      ) {
+        return;
+      }
+
       event.preventDefault();
       if (wheelLocked.current) return;
 
@@ -198,6 +213,15 @@ export function SpiralProjects() {
   }, [virtualIndex]);
 
   const handleTouchStart = (event: TouchEvent<HTMLElement>) => {
+    const eventTarget = event.target;
+    if (
+      eventTarget instanceof Element
+      && eventTarget.closest(".project-panel-content")
+    ) {
+      touchStartY.current = null;
+      return;
+    }
+
     touchStartY.current = event.touches[0]?.clientY ?? null;
   };
 
@@ -421,23 +445,28 @@ export function SpiralProjects() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: reducedMotion ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] }}
           >
-            <p className="project-panel-kicker">PROJECT / {activeProject.id}</p>
-            <h1>{activeProject.title}</h1>
-            <p className="project-panel-subtitle">{activeProject.subtitle}</p>
-            <p className="project-panel-description">{activeProject.description}</p>
+            <div className="project-panel-details">
+              <p className="project-panel-kicker">PROJECT / {activeProject.id}</p>
+              <h1>{activeProject.title}</h1>
+              <p className="project-panel-subtitle">{activeProject.subtitle}</p>
 
-            <div className="project-panel-result">
-              <span>RESULT</span>
-              <p>{activeProject.outcome}</p>
+              <div className="project-panel-description">
+                <span>THE BUILD</span>
+                <p>{activeProject.description}</p>
+              </div>
+
+              <div className="project-panel-result">
+                <span>THE RESULT</span>
+                <p>{activeProject.outcome}</p>
+              </div>
+
+              <div className="project-panel-toolset">
+                <span>TOOLS + METHODS</span>
+                <div className="project-panel-tags">
+                  {activeProject.tags.map((tag) => <span key={tag}>{tag}</span>)}
+                </div>
+              </div>
             </div>
-
-            <div className="project-panel-tags">
-              {activeProject.tags.map((tag) => <span key={tag}>{tag}</span>)}
-            </div>
-
-            <Link className="project-panel-link" href={`/projects#${activeProject.slug}`}>
-              View project <ArrowUpRight size={17} />
-            </Link>
           </motion.article>
 
           <div className="spiral-controls">
