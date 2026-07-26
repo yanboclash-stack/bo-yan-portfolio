@@ -26,6 +26,7 @@ import { projects } from "@/data/portfolio";
 const STEP_ANGLE = 54;
 const STEP_RISE = 56;
 const VISIBLE_STEPS = 17;
+const PROJECT_SELECTION_KEY = "bo-yan-portfolio:active-project";
 const ROTATION_SPRING = {
   type: "spring" as const,
   stiffness: 190,
@@ -102,6 +103,7 @@ function modulo(value: number, divisor: number) {
 export function SpiralProjects() {
   const [virtualIndex, setVirtualIndex] = useState(0);
   const reducedMotion = useReducedMotion();
+  const selectionRestored = useRef(false);
   const wheelAccumulator = useRef(0);
   const wheelLocked = useRef(false);
   const touchStartY = useRef<number | null>(null);
@@ -123,6 +125,34 @@ export function SpiralProjects() {
       return current + distance;
     });
   }, []);
+
+  useEffect(() => {
+    let savedIndex = -1;
+
+    try {
+      const savedProject = window.sessionStorage.getItem(PROJECT_SELECTION_KEY);
+      savedIndex = projects.findIndex((project) => project.slug === savedProject);
+    } catch {
+      // Keep the first project selected when browser storage is unavailable.
+    }
+
+    const restoreFrame = window.requestAnimationFrame(() => {
+      if (savedIndex >= 0) setVirtualIndex(savedIndex);
+      selectionRestored.current = true;
+    });
+
+    return () => window.cancelAnimationFrame(restoreFrame);
+  }, []);
+
+  useEffect(() => {
+    if (!selectionRestored.current) return;
+
+    try {
+      window.sessionStorage.setItem(PROJECT_SELECTION_KEY, activeProject.slug);
+    } catch {
+      // Navigation still works normally when browser storage is unavailable.
+    }
+  }, [activeProject.slug]);
 
   useEffect(() => {
     const handleWheel = (event: WheelEvent) => {
