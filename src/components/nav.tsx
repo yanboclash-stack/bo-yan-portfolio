@@ -8,9 +8,9 @@ import { useState } from "react";
 
 const links = [
   ["/", "Project"],
-  ["/about", "About"],
   ["/experience", "Experience"],
   ["/coursework", "Coursework"],
+  ["/about", "A Little About Me"],
   ["/contact", "Contact"],
 ] as const;
 
