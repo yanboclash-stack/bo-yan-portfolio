@@ -1,5 +1,5 @@
-import { SignalJourney } from "@/components/signal-journey";
+import { SpiralProjects } from "@/components/spiral-projects";
 
 export default function Home() {
-  return <SignalJourney />;
+  return <SpiralProjects />;
 }
