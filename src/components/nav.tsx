@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 
 const links = [
-  ["/", "Home"],
+  ["/", "Project"],
   ["/about", "About"],
   ["/experience", "Experience"],
   ["/coursework", "Coursework"],
